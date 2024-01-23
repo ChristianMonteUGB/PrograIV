@@ -1,2 +1,2 @@
-# PrograIV
-Codigos de las clases de programacion ciclo 4
+# PrograIV-2024
+Desarrollo de los códigos de Programación Computacional IV - Ciclo I 2024
