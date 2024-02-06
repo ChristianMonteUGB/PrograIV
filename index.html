@@ -1,47 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Introduccion a JS</title>
+    <title>App de Productos</title>
 
     <link rel="stylesheet" href="	https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 </head>
-
 <body>
     <div class="container-fluid">
         <div id="app">
             <div class="row">
-                <div class="col">SISTEMA DE FACTURACION</div>
+                <div class="col">::.. SISTEMA DE FACTURACION .::</div>
             </div>
             <div class="row">
                 <div class="col col-md-6">
-                    <div class="row">
+                    <div class="row p-1">
                         <div class="col col-md-2">CODIGO</div>
                         <div class="col col-md-3">
                             <input v-model="producto.codigo" type="text" class="form-control">
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row p-1">
                         <div class="col col-md-2">NOMBRE</div>
                         <div class="col col-md-5">
                             <input v-model="producto.nombre" type="text" class="form-control">
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row p-1">
                         <div class="col col-md-2">MARCA</div>
                         <div class="col col-md-5">
                             <input v-model="producto.marca" type="text" class="form-control">
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row p-1">
                         <div class="col col-md-2">PRESENTACION</div>
                         <div class="col col-md-3">
                             <input v-model="producto.presentacion" type="text" class="form-control">
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row p-1">
                         <div class="col col-md-2">PRECIO</div>
                         <div class="col col-md-3">
                             <input v-model="producto.precio" type="number" class="form-control">
@@ -49,68 +47,120 @@
                     </div>
                     <div class="row p-1">
                         <div class="col">
-                            <button @click.prevent.default="guardarProducto" class="btn btn-success">GUARDAR </button>
-                            <button @click.prevent.default="nuevoProducto" class="btn btn-success">NUEVO </button>
+                            <button @click.prevent.default="guardarProducto" class="btn btn-success">GUARDAR</button>
+                            <button @click.prevent.default="nuevoProducto" class="btn btn-warning">NUEVO</button>
                         </div>
                     </div>
                 </div>
                 <div class="col col-md-6">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>CODIGO</th>
-                                <th>NOMBRE</th>
-                                <th>MARCA</th>
-                                <th>PRESENTACION</th>
-                                <th>PRECIO</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="producto in productos">
-                                <td>{{producto.codigo}}</td> 
-                                <td>{{producto.nombre}}</td>
-                                <td>{{producto.marca}}</td>
-                                <td>{{producto.presentacion}}</td>
-                                <td>{{producto.precio}}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-
+                    <form id="frmProducto">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>BUSCAR</th>
+                                    <th colspan="5">
+                                        <input placeholder="codigo, nombre, marca, presentacion" type="search" v-model="valor" @keyup="buscarProducto" class="form-control">
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>CODIGO</th>
+                                    <th>NOMBRE</th>
+                                    <th>MARCA</th>
+                                    <th>PRESENTACION</th>
+                                    <th>PRECIO</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr @click="modificarProducto(producto)" v-for="producto in productos" :key="producto.idProducto">
+                                    <td>{{producto.codigo}}</td>
+                                    <td>{{producto.nombre}}</td>
+                                    <td>{{producto.marca}}</td>
+                                    <td>{{producto.presentacion}}</td>
+                                    <td>{{producto.precio}}</td>
+                                    <td><button @click.prevent.default="eliminarProducto(producto.idProducto)" class="btn btn-danger">del</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
-
+   
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+    <script src="db.js"></script>
     <script>
         var app = new Vue({
             el: '#app',
-            data: {
-                productos: [],
+            data:{
+                valor:'',
+                productos:[],
+                accion:'nuevo',
                 producto:{
-                    codigo: '',
-                    nombre: '',
-                    marca: '',
-                    presentacion: '',
-                    precio: 0.0
+                    idProducto: new Date().getTime(),
+                    codigo:'',
+                    nombre:'',
+                    marca:'',
+                    presentacion:'',
+                    precio:0.0
                 }
             },
             methods:{
+                buscarProducto(e){
+                    this.listarProductos();
+                },
+                eliminarProducto(idProducto){
+                    if( confirm(`Esta seguro de elimina el producto?`) ){
+                        let store = abrirStore('productos', 'readwrite'),
+                        query = store.delete(idProducto);
+                    query.onsuccess = e=>{
+                        this.nuevoProducto();
+                    };
+                    }
+                },
+                modificarProducto(producto){
+                    this.accion = 'modificar';
+                    this.producto = producto;
+                },
                 guardarProducto(){
-                    //almacenamiento del objeto en localStorage
-                    this.productos.push(this.producto)
-                    localStorage.setItem('productos', JSON.stringify(this.productos));
+                    //almacenamiento del objeto productos en indexedDB
+                    let store = abrirStore('productos', 'readwrite'),
+                        query = store.put({...this.producto});
+                    query.onsuccess = e=>{
+                        this.nuevoProducto();
+                        this.listarProductos();
+                    };
+                    query.onerror = e=>{
+                        console.error('Error al guardar en productos', e.message());
+                    };
+                },
+                nuevoProducto(){
+                    this.accion = 'nuevo';
+                    this.producto = {
+                        idProducto: new Date().getTime(),
+                        codigo:'',
+                        nombre:'',
+                        marca:'',
+                        presentacion:'',
+                        precio:0.0
+                    }
+                },
+                listarProductos(){
+                    let store = abrirStore('productos', 'readonly'),
+                        data = store.getAll();
+                    data.onsuccess = resp=>{
+                        this.productos = data.result
+                            .filter(producto=>producto.codigo.includes(this.valor) || 
+                            producto.nombre.toLowerCase().includes(this.valor.toLowerCase()) || 
+                            producto.marca.toLowerCase().includes(this.valor.toLowerCase()) || 
+                            producto.presentacion.toLowerCase().includes(this.valor.toLowerCase()));
+                    };
                 }
             },
-            listarProductos(){
-                this.productos= JSON.parse(localStorage.getItem('productos') || []);
+            created(){
+                //this.listarProductos();
             }
-            
-        },
-        created(){
-            this.listarProductos();
-        }
-
         })
     </script>
 </body>
