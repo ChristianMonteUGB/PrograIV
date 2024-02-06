@@ -11,7 +11,7 @@
     <div class="container-fluid">
         <div id="app">
             <div class="row">
-                <div class="col">::.. SISTEMA DE FACTURACION .::</div>
+                <div class="col">::.. SISTEMA DE ALUMNOS .::</div>
             </div>
             <div class="row">
                 <div class="col col-md-6">
@@ -28,21 +28,27 @@
                         </div>
                     </div>
                     <div class="row p-1">
-                        <div class="col col-md-2">MARCA</div>
+                        <div class="col col-md-2">APELLIDO</div>
                         <div class="col col-md-5">
                             <input v-model="producto.marca" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="row p-1">
-                        <div class="col col-md-2">PRESENTACION</div>
+                        <div class="col col-md-2">CIUDAD</div>
                         <div class="col col-md-3">
                             <input v-model="producto.presentacion" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="row p-1">
-                        <div class="col col-md-2">PRECIO</div>
+                        <div class="col col-md-2">DIRECCION</div>
                         <div class="col col-md-3">
-                            <input v-model="producto.precio" type="number" class="form-control">
+                            <input v-model="producto.presentacion" type="text" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row p-1">
+                        <div class="col col-md-2"></div>
+                        <div class="col col-md-3">
+                            <input v-model="producto.presentacion" type="text" class="form-control">
                         </div>
                     </div>
                     <div class="row p-1">
@@ -65,9 +71,9 @@
                                 <tr>
                                     <th>CODIGO</th>
                                     <th>NOMBRE</th>
-                                    <th>MARCA</th>
-                                    <th>PRESENTACION</th>
-                                    <th>PRECIO</th>
+                                    <th>APELLIDO</th>
+                                    <th>CIUDAD</th>
+                                    <th>DIRECCION</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -75,9 +81,10 @@
                                 <tr @click="modificarProducto(producto)" v-for="producto in productos" :key="producto.idProducto">
                                     <td>{{producto.codigo}}</td>
                                     <td>{{producto.nombre}}</td>
-                                    <td>{{producto.marca}}</td>
-                                    <td>{{producto.presentacion}}</td>
-                                    <td>{{producto.precio}}</td>
+                                    <td>{{producto.apellido}}</td>
+                                    <td>{{producto.ciudad}}</td>
+                                    <td>{{producto.direccion}}</td>
+                                    
                                     <td><button @click.prevent.default="eliminarProducto(producto.idProducto)" class="btn btn-danger">del</button></td>
                                 </tr>
                             </tbody>
@@ -101,9 +108,9 @@
                     idProducto: new Date().getTime(),
                     codigo:'',
                     nombre:'',
-                    marca:'',
-                    presentacion:'',
-                    precio:0.0
+                    apellido:'',
+                    ciudad:'',
+                    direccion:'',
                 }
             },
             methods:{
@@ -111,7 +118,7 @@
                     this.listarProductos();
                 },
                 eliminarProducto(idProducto){
-                    if( confirm(`Esta seguro de elimina el producto?`) ){
+                    if( confirm(`Esta seguro de elimina el alumno?`) ){
                         let store = abrirStore('productos', 'readwrite'),
                         query = store.delete(idProducto);
                     query.onsuccess = e=>{
@@ -132,7 +139,7 @@
                         this.listarProductos();
                     };
                     query.onerror = e=>{
-                        console.error('Error al guardar en productos', e.message());
+                        console.error('Error al guardar en alumno', e.message());
                     };
                 },
                 nuevoProducto(){
@@ -141,9 +148,9 @@
                         idProducto: new Date().getTime(),
                         codigo:'',
                         nombre:'',
-                        marca:'',
-                        presentacion:'',
-                        precio:0.0
+                        apellido:'',
+                        ciudad: '',
+                        direccion: '',   
                     }
                 },
                 listarProductos(){
@@ -153,8 +160,9 @@
                         this.productos = data.result
                             .filter(producto=>producto.codigo.includes(this.valor) || 
                             producto.nombre.toLowerCase().includes(this.valor.toLowerCase()) || 
-                            producto.marca.toLowerCase().includes(this.valor.toLowerCase()) || 
-                            producto.presentacion.toLowerCase().includes(this.valor.toLowerCase()));
+                            producto.apellido.toLowerCase().includes(this.valor.toLowerCase()) ||
+                            producto.ciudad.toLowerCase().includes(this.valor.toLowerCase()) ||
+                            producto.direccion.toLowerCase().includes(this.valor.toLowerCase()));
                     };
                 }
             },
