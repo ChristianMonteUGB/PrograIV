@@ -4,6 +4,7 @@ Vue.component('componente-estudiante', {
         return {
             valor:'',
             estudiante:[],
+            categoria:[],
             accion:'nuevo',
             estudiante:{
                 estudiante:{

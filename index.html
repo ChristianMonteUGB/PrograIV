@@ -19,16 +19,16 @@
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
                         <a class="nav-link" @click="abrirFormulario('categoria')">Categoria</a>
-                        <a class="nav-link" @click="abrirFormulario('producto')">Alumnos</a>
-                        <a class="nav-link" @click="abrirFormulario('cliente')">Cliente</a>
+                        <a class="nav-link" @click="abrirFormulario('alumnos')">Alumnos</a>
+                        <a class="nav-link" @click="abrirFormulario('docentes')">Docentes</a>
                     </div>
                 </div>
             </div>
         </nav>
         <div id="appSistema">
             <componente-categorias ref="categoria" v-show="forms['categoria'].mostrar"></componente-categorias>
-            <componente-productos ref="producto" v-show="forms['producto'].mostrar"></componente-productos>
-            <componente-clientes ref="cliente" v-show="forms['cliente'].mostrar"></componente-clientes>
+            <componente-estudiante ref="estudiante" v-show="forms['estudiante'].mostrar"></componente-estudiante>
+            <componente-docente ref="docente" v-show="forms['docente'].mostrar"></componente-docente>
         </div>
     </div>
    
@@ -36,8 +36,8 @@
     <script src="https://unpkg.com/vue-select@3.0.0"></script>
     <script src="db.js"></script>
     <script src="imagenes.js"></script>
-    <script src="alumno.js"></script>
-    <script src="estudiantes.js"></script>
+    <script src="estudiante.js"></script>
+    <script src="docente.js"></script>
     <script src="main.js"></script>
 </body>
 </html>

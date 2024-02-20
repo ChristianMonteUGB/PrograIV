@@ -2,9 +2,9 @@ var app = new Vue({
     el: '#app',
     data:{
         forms:{
-            producto:{mostrar:false},
+            estudiante:{mostrar:false},
             categoria:{mostrar:false},
-            cliente:{mostrar:false},
+            docente:{mostrar:false},
         }
     },
     methods:{

@@ -20,7 +20,7 @@ Vue.component('componente-docente', {
         },
         eliminardocente(idDocente){
             if( confirm(`Esta seguro de eliminar al Docente?`) ){
-                let store = abrirStore('clientes', 'readwrite'),
+                let store = abrirStore('docente', 'readwrite'),
                 query = store.delete(idDocente);
             query.onsuccess = e=>{
                 this.nuevodocente();
@@ -33,8 +33,8 @@ Vue.component('componente-docente', {
             this.docente = docente;
         },
         guardardocente(){
-            //almacenamiento del objeto clientes en indexedDB
-            let store = abrirStore('docente', 'readwrite'),
+            //almacenamiento del objeto docentes en indexedDB
+            let store = abrirStore('docentes', 'readwrite'),
                 query = store.put({...this.docente});
             query.onsuccess = e=>{
                 this.nuevodocente();
@@ -59,7 +59,7 @@ Vue.component('componente-docente', {
             let store = abrirStore('docente', 'readonly'),
                 data = store.getAll();
             data.onsuccess = resp=>{
-                this.clientes = data.result
+                this.docentes = data.result
                     .filter(docente=>docente.codigo.includes(this.valor) || 
                     docente.nombre.toLowerCase().includes(this.valor.toLowerCase()) || 
                     docente.direccion.toLowerCase().includes(this.valor.toLowerCase()) || 
@@ -77,31 +77,31 @@ Vue.component('componente-docente', {
                         <div class="row p-1">
                             <div class="col col-md-2">CODIGO</div>
                             <div class="col col-md-3">
-                                <input v-model="cliente.codigo" type="text" class="form-control">
+                                <input v-model="docente.codigo" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
                             <div class="col col-md-2">NOMBRE</div>
                             <div class="col col-md-5">
-                                <input v-model="cliente.nombre" type="text" class="form-control">
+                                <input v-model="docente.nombre" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
                             <div class="col col-md-2">DIRECCION</div>
                             <div class="col col-md-3">
-                                <input v-model="cliente.direccion" type="text" class="form-control">
+                                <input v-model="docente.direccion" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
                             <div class="col col-md-2">TELEFONO</div>
                             <div class="col col-md-3">
-                                <input v-model="cliente.telefono" type="text" class="form-control">
+                                <input v-model="docente.telefono" type="text" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
                             <div class="col col-md-2">EMAIL</div>
                             <div class="col col-md-3">
-                                <input v-model="cliente.email" type="email" class="form-control">
+                                <input v-model="docente.email" type="email" class="form-control">
                             </div>
                         </div>
                         <div class="row p-1">
@@ -117,13 +117,13 @@ Vue.component('componente-docente', {
                 <div class="card text-bg-dark">
                     <div class="card-header">LISTADO DE DOCENTES</div>
                     <div class="card-body">
-                        <form id="frmCliente">
+                        <form id="frmdocente">
                             <table class="table table-dark table-hover">
                                 <thead>
                                     <tr>
                                         <th>BUSCAR</th>
                                         <th colspan="5">
-                                            <input placeholder="codigo, nombre, direccion, telefono, email" type="search" v-model="valor" @keyup="buscarCliente" class="form-control">
+                                            <input placeholder="codigo, nombre, direccion, telefono, email" type="search" v-model="valor" @keyup="buscardocente" class="form-control">
                                         </th>
                                     </tr>
                                     <tr>
@@ -136,13 +136,13 @@ Vue.component('componente-docente', {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr @click="modificarCliente(cliente)" v-for="cliente in clientes" :key="cliente.idCliente">
-                                        <td>{{cliente.codigo}}</td>
-                                        <td>{{cliente.nombre}}</td>
-                                        <td>{{cliente.direccion}}</td>
-                                        <td>{{cliente.telefono}}</td>
-                                        <td>{{cliente.email}}</td>
-                                        <td><button @click.prevent.default="eliminarCliente(cliente.idCliente)" class="btn btn-danger">del</button></td>
+                                    <tr @click="modificardocente(docente)" v-for="docente in docentes" :key="docente.iddocente">
+                                        <td>{{docente.codigo}}</td>
+                                        <td>{{docente.nombre}}</td>
+                                        <td>{{docente.direccion}}</td>
+                                        <td>{{docente.telefono}}</td>
+                                        <td>{{docente.email}}</td>
+                                        <td><button @click.prevent.default="eliminardocente(docente.iddocente)" class="btn btn-danger">del</button></td>
                                     </tr>
                                 </tbody>
                             </table>
